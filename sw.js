@@ -1,4 +1,4 @@
-const CACHE_NAME = "organizeme-v1";
+const CACHE_NAME = "organizeme-v2";
 const ASSETS = [
   "/",
   "/index.html",
@@ -34,7 +34,9 @@ self.addEventListener("fetch", e => {
     url.hostname.includes("firebase") ||
     url.hostname.includes("googleapis") ||
     url.hostname.includes("cloudflare") ||
-    url.hostname.includes("gstatic")
+    url.hostname.includes("gstatic") ||
+    url.hostname.includes("generativelanguage") ||
+    url.hostname.includes("gemini")
   ) {
     e.respondWith(fetch(e.request).catch(() => new Response("", { status: 503 })));
     return;
