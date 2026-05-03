@@ -441,14 +441,16 @@ function showScreen(s){
 }
 
 // ── MODAL ──
+let _modalCallbacks=[];
 function showModal(title,msg,btns){
   closeModal();
+  _modalCallbacks=btns.map(b=>b.fn);
   const ov=document.createElement("div");ov.className="modal-overlay";ov.id="modal-overlay";
-  const btnHtml=btns.map(b=>`<button class="${b.red?"btn-red":b.ghost?"btn-ghost":"btn"}" onclick="(${b.fn.toString()})()">${b.label}</button>`).join("");
+  const btnHtml=btns.map((b,i)=>`<button class="${b.red?"btn-red":b.ghost?"btn-ghost":"btn"}" onclick="_modalCallbacks[${i}]()">${b.label}</button>`).join("");
   ov.innerHTML=`<div class="modal"><h3>${title}</h3><p>${msg}</p><div class="row">${btnHtml}</div></div>`;
   document.body.appendChild(ov);
 }
-function closeModal(){const m=document.getElementById("modal-overlay");if(m)m.remove();}
+function closeModal(){const m=document.getElementById("modal-overlay");if(m)m.remove();_modalCallbacks=[];}
 
 // ── NOTIFICATIONS ──
 function scheduleNotifications(){
@@ -1262,9 +1264,3 @@ if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
     navigator.serviceWorker.register("/sw.js")
       .then(()=>console.log("SW enregistré"))
-      .catch(err=>console.log("SW erreur:",err));
-  });
-}
-</script>
-</body>
-</html>
